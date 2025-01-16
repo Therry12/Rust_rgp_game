@@ -1,5 +1,4 @@
-#[derive(Default)]
-#[derive(Debug)]
+#[derive(Default, Debug)]
 struct Player {
     player_name: String,
     player_attack: i32,
@@ -9,7 +8,8 @@ struct Player {
 
 impl Player {
     fn init_player() -> Player {
-        Player { // Setting default values.
+        Player {
+            // Setting default values.
             player_hp: 10,
             player_name: String::new(),
             player_attack: 5,
@@ -47,7 +47,7 @@ impl Enemy {
 enum EPLAYER_ACTION {
     Attack,
     Leave,
-    Ignore
+    Ignore,
 }
 
 fn Start_Game() {
@@ -60,7 +60,8 @@ fn Start_Game() {
     player.player_name = Hello_User();
     println!("Hello, {}", player.player_name);
 
-    while true { // MAIN GAME LOOP
+    while true {
+        // MAIN GAME LOOP
         if !enemy_defetead {
             println!("[{}hp] 'A'ttack him or 'L'eave? ", enemy.enemy_hp);
         } else {
@@ -71,17 +72,20 @@ fn Start_Game() {
         }
         let input: EPLAYER_ACTION = Get_Action();
         match input {
-            EPLAYER_ACTION::Leave => return,    
+            EPLAYER_ACTION::Leave => return,
             EPLAYER_ACTION::Attack => {
                 enemy.enemy_hp -= player.attack_enemy();
                 if enemy.enemy_hp <= 0 {
                     enemy_defetead = true;
                     player.player_balance += enemy.enemy_reward;
-                    println!("Goblin defeated. You earn {} money.\n Now your balance: {}", enemy.enemy_reward, player.player_balance);
+                    println!(
+                        "Goblin defeated. You earn {} money.\n Now your balance: {}",
+                        enemy.enemy_reward, player.player_balance
+                    );
                     continue;
                 }
                 println!("You attack goblin, now goblin hp is {}", enemy.enemy_hp);
-           },
+            }
             EPLAYER_ACTION::Ignore => todo!(), // TODO: Add ignore option
         }
     }
@@ -105,15 +109,28 @@ fn Hello_User() -> String {
 
 fn Get_Action() -> EPLAYER_ACTION {
     let mut player_input = String::new();
-    std::io::stdin().read_line(&mut player_input).expect("Can't read stdin. Player->Get_Action");
+    std::io::stdin()
+        .read_line(&mut player_input)
+        .expect("Can't read stdin. Player->Get_Action");
 
-    let player_input: char = player_input.trim().parse().expect("Can't convert player_input to char in Get_Action");
+    let player_input: char = player_input
+        .trim()
+        .parse()
+        .expect("Can't convert player_input to char in Get_Action");
     println!("BUTTON PRESSED: {}", player_input);
     match player_input {
-        'A' | 'a' => {println!("You choose attack"); return EPLAYER_ACTION::Attack;},
-        'L' | 'l' => {println!("You choose leave"); return EPLAYER_ACTION::Leave;}
-        _ => {println!("Incorrect choose."); return EPLAYER_ACTION::Ignore;},
-
+        'A' | 'a' => {
+            println!("You choose attack");
+            return EPLAYER_ACTION::Attack;
+        }
+        'L' | 'l' => {
+            println!("You choose leave");
+            return EPLAYER_ACTION::Leave;
+        }
+        _ => {
+            println!("Incorrect choose.");
+            return EPLAYER_ACTION::Ignore;
+        }
     }
 }
 
